@@ -14,6 +14,18 @@ public class ARSelectionInteractableUIBlocked : ARSelectionInteractable
             return false;
         }
         else
+        if(RoomManager.instance!=null)
+        {
+            if(RoomManager.instance.IsObjectLocked())
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
         {
             return true;
         }

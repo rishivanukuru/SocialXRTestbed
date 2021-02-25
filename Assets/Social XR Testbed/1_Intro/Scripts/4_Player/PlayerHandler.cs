@@ -23,10 +23,18 @@ public class PlayerHandler : MonoBehaviourPun, IPunObservable
     [HideInInspector]
     public AvatarChangeHandler myAvatars;
 
+    [HideInInspector]
+    public AvatarDrawHandler myDraw;
+
+    [HideInInspector]
+    public AvatarFaceHandler myFaces;
+
     private void Awake()
     {
         myPhotonView = GetComponent<PhotonView>();
         myAvatars = GetComponent<AvatarChangeHandler>();
+        myFaces = GetComponent<AvatarFaceHandler>();
+        myDraw = GetComponent<AvatarDrawHandler>();
     }
 
     private void Start()
@@ -37,7 +45,7 @@ public class PlayerHandler : MonoBehaviourPun, IPunObservable
 
             if (RoomManager.instance.isPlaced)
             {
-                this.gameObject.transform.parent = RoomManager.instance.referenceObject.transform;
+                //this.gameObject.transform.parent = RoomManager.instance.referenceObject.transform;
                 isParented = true;
                 MakeVisible();
             }
@@ -50,23 +58,35 @@ public class PlayerHandler : MonoBehaviourPun, IPunObservable
 
     private void Update()
     {
-        if(!isParented)
+        /*
+        if(!photonView.IsMine)
         {
-            if(RoomManager.instance.isPlaced)
+            if (!isParented)
             {
-                this.gameObject.transform.parent = RoomManager.instance.referenceObject.transform;
-                isParented = true;
+                if (RoomManager.instance.isPlaced)
+                {
+                    this.gameObject.transform.parent = RoomManager.instance.referenceObject.transform;
+                    isParented = true;
+                }
             }
         }
+        */
+
+
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(RoomManager.instance.referenceObject.transform.InverseTransformPoint(transform.position));
-            stream.SendNext(Quaternion.Inverse(RoomManager.instance.referenceObject.transform.rotation) * transform.rotation);
-            //stream.SendNext(RoomManager.instance.referenceObject.transform.lossyScale.x);
+            if (RoomManager.instance.referenceObject != null)
+            {
+                stream.SendNext(RoomManager.instance.referenceObject.transform.InverseTransformPoint(transform.position));
+                stream.SendNext(Quaternion.Inverse(RoomManager.instance.referenceObject.transform.rotation) * transform.rotation);
+                //stream.SendNext(RoomManager.instance.referenceObject.transform.lossyScale.x);
+
+            }
+
         }
         else
         {

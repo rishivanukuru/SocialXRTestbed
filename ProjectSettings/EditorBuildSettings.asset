@@ -17,9 +17,15 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Social XR Testbed/1_Intro/Room_AvatarChanger.unity
     guid: 37b7a43e3d8128e4eae81a4d79710089
-  - enabled: 1
+  - enabled: 0
     path: Assets/Social XR Testbed/1_Intro/Room_Draw.unity
     guid: a5c266b42f51ec140b3110b4760204d6
+  - enabled: 1
+    path: Assets/Social XR Testbed/1_Intro/Room_Paint.unity
+    guid: ffa6aca8045de0842afa74e0fac86154
+  - enabled: 0
+    path: Assets/Social XR Testbed/1_Intro/Room_Party.unity
+    guid: 60d031e8806483640acbba5ede2efdf8
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 5d03944d96213274e86d5f09d3f79844,
       type: 2}

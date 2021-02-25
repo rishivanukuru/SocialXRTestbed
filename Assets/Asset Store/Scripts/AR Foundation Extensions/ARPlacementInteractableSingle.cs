@@ -23,7 +23,7 @@ public class ARPlacementInteractableSingle : ARBaseGestureInteractable
     private static GameObject trackablesObject;
 
     public bool isObjectPlaced = false;
-
+    public bool isLocked = true;
 
     protected override bool CanStartManipulationForGesture(TapGesture gesture)
     {
@@ -76,11 +76,13 @@ public class ARPlacementInteractableSingle : ARBaseGestureInteractable
             if (placementObject == null)
             {
                 placementObject = Instantiate(placementPrefab, hit.pose.position, hit.pose.rotation);
+                isLocked = true;
 
                 if(RoomManager.instance!=null)
                 {
                     RoomManager.instance.referenceObject = placementObject;
-
+                    RoomManager.instance.ObjectLock();
+                    
                     RoomManager.instance.SpawnPlayer();
                 }
 
@@ -103,6 +105,18 @@ public class ARPlacementInteractableSingle : ARBaseGestureInteractable
 
                 onObjectPlaced?.Invoke(this, placementObject);
             }
+            else
+            {
+                //If object is placed, and someone wants to reset, code goes here
+                if(RoomManager.instance!=null)
+                {
+                    if(!RoomManager.instance.IsObjectLocked())
+                    placementObject.transform.position = hit.pose.position;
+                }
+
+            }
         }
     }
+
+
 }

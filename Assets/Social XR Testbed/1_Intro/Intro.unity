@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -173,7 +173,7 @@ MonoBehaviour:
   roomSizeInput: {fileID: 1325282682}
   guestNameInput: {fileID: 998518870}
   guestRoomNameInput: {fileID: 843737975}
-  password: password
+  password: 2021@imxd
   passwordInput: {fileID: 1190237827}
   lobbySceneIndex: 1
 --- !u!114 &3459544
@@ -7619,7 +7619,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Version 0.3 \nFebruary 2021"
+  m_text: "Version 2.4 \nFebruary 2021"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 94cc5b13629f8cb45b18cf1a92649420, type: 2}
   m_sharedMaterial: {fileID: -4524565375830358378, guid: 94cc5b13629f8cb45b18cf1a92649420,

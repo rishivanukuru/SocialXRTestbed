@@ -293,6 +293,7 @@ GameObject:
   - component: {fileID: 2274555472683038265}
   - component: {fileID: 2274555472683038264}
   - component: {fileID: 9046913369373249014}
+  - component: {fileID: 8329716872508390284}
   m_Layer: 0
   m_Name: HumanoidIK
   m_TagString: Untagged
@@ -473,6 +474,28 @@ MonoBehaviour:
   BlendX: 0
   BlendY: 0
   DirectionToNewPos: {x: 0, y: 0, z: 0}
+--- !u!114 &8329716872508390284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1392089435962008948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  observableSearch: 2
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents: []
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1700076116763701816
 GameObject:
   m_ObjectHideFlags: 0
@@ -757,6 +780,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2274555471921420131}
+  - component: {fileID: 1012391789022437867}
   m_Layer: 0
   m_Name: phone_IK_upper
   m_TagString: Untagged
@@ -783,6 +807,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1012391789022437867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2274555471921420135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  observableSearch: 2
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents: []
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &2274555471948134966
 GameObject:
   m_ObjectHideFlags: 0

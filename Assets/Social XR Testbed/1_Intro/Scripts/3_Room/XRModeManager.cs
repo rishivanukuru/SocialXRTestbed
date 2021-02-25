@@ -5,7 +5,7 @@ using UnityEngine.Android;
 
 public class XRModeManager : MonoBehaviour
 {
-
+    public static int xrMode;
     //Initial Camera
     public GameObject initialCamera;
 
@@ -29,6 +29,7 @@ public class XRModeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        xrMode = 0;
         initialCamera.SetActive(true);
         initialPanel.SetActive(true);
         screenObjects.SetActive(false);
@@ -46,6 +47,7 @@ public class XRModeManager : MonoBehaviour
 
     public void ScreenMode()
     {
+        xrMode = 2;
         initialPanel.SetActive(false);
         initialCamera.SetActive(false);
 
@@ -58,6 +60,7 @@ public class XRModeManager : MonoBehaviour
 
     public void ARMode()
     {
+        xrMode = 1;
         initialPanel.SetActive(false);
         initialCamera.SetActive(false);
 

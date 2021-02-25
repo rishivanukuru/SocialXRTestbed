@@ -1,23 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class TableObjectManager : MonoBehaviour
 {
 
     public GameObject tableObjectHolder;
-
     [HideInInspector]
     public GameObject currentObject;
-
     [HideInInspector]
     public int tableObjects;
     [HideInInspector]
     public int currentIndex;
 
+    public VideoPlayer syncVideoPlayer;
+
     // Start is called before the first frame update
     void Start()
     {
+
+  
 
         tableObjects = tableObjectHolder.transform.childCount;
         foreach(Transform child in tableObjectHolder.transform)
@@ -54,4 +58,21 @@ public class TableObjectManager : MonoBehaviour
         currentObject = tableObjectHolder.transform.GetChild(currentIndex).gameObject;
         tableObjectHolder.transform.GetChild(currentIndex).gameObject.SetActive(true);
     }
+
+    public void StartVideo()
+    {
+        if (syncVideoPlayer != null)
+        {
+            if(syncVideoPlayer.isPlaying)
+            {
+                syncVideoPlayer.Pause();
+            }
+            else
+            {
+                syncVideoPlayer.Play();
+            }
+
+        }
+    }
+
 }

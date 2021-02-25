@@ -28,14 +28,14 @@ public class AvatarChangeManager : MonoBehaviour
     public int currentAvatar;
     public int objectNumber = 4;
     public int currentObject;
-
+    public bool displayFace;
 
     void Start()
     {
         myPhotonView = GetComponent<PhotonView>();
         currentAvatar = 0;
         currentObject = 0;
-
+        displayFace = false;
         //avatarButton.SetActive(false);
         //avatarButtonAR.SetActive(false);
         hostPanel.SetActive(false);
@@ -64,8 +64,7 @@ public class AvatarChangeManager : MonoBehaviour
             {
                 hostPanel.SetActive(true);
                 hostAvatarButton.GetComponent<Button>().onClick.AddListener(ChangeAllAvatars);
-                hostObjectButton.GetComponent<Button>().onClick.AddListener(ChangeTableObject);
-                
+                hostObjectButton.GetComponent<Button>().onClick.AddListener(ChangeTableObject);                
             }
             else
             {
@@ -79,6 +78,20 @@ public class AvatarChangeManager : MonoBehaviour
         
     }
 
+    public void PlayTableVideo()
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            myPhotonView.RPC("RPCPlayTableVideo", RpcTarget.AllBuffered);
+        }
+    }
+
+    [PunRPC]
+    public void RPCPlayTableVideo()
+    {
+        RoomManager.instance.referenceObject.GetComponent<TableObjectManager>().StartVideo();
+    }
+
     public void ChangeTableObject()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -89,6 +102,25 @@ public class AvatarChangeManager : MonoBehaviour
                 currentObject = 0;
             }
             myPhotonView.RPC("RPCChangeTableObject", RpcTarget.AllBuffered, currentObject);
+        }
+    }
+
+    public void ChangeAvatarFaces()
+    {
+        displayFace = !displayFace;
+        if (PhotonNetwork.IsMasterClient)
+        {
+            myPhotonView.RPC("RPCChangeFaces", RpcTarget.AllBuffered, displayFace);
+        }
+
+    }
+
+    [PunRPC]
+    public void RPCChangeFaces(bool isFaceDisplay)
+    {
+        foreach (PlayerHandler p in RoomManager.instance.OtherPlayerList)
+        {
+            p.myFaces.DisplayAvatarFace(isFaceDisplay);
         }
     }
 

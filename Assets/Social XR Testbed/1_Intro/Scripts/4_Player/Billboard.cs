@@ -18,12 +18,13 @@ public class Billboard : MonoBehaviour
 
     void Start()
     {
-        Cam = Camera.main.transform;
+        
     }
 
 
     void Update()
     {
+        Cam = Camera.main.transform;
         LookVector = Cam.position - transform.position;
         
         if (RotationType == rotationType.YAxis)

@@ -7,6 +7,7 @@ using Photon.Voice.PUN;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using HSVPicker;
 
 public class RoomManager : MonoBehaviour
 {
@@ -44,11 +45,18 @@ public class RoomManager : MonoBehaviour
 
     [Header("Drawing")]
     public bool DrawMode = false;
+    public bool PartyMode = false;
+    public bool ChangeMode = false;
     [HideInInspector]
     public DrawActionManager drawActionManager;
 
+    public ColorPicker colorPicker;
+    public Slider weightSlider;
+
     [Header("Raising Hand")]
     public bool isHandRaised;
+
+    private bool isLocked;
 
     private void Awake()
     {
@@ -62,6 +70,8 @@ public class RoomManager : MonoBehaviour
 
     private void Start()
     {
+        isLocked = false;
+
         myPhotonView = GetComponent<PhotonView>();
         if(DrawMode)
         {
@@ -87,7 +97,22 @@ public class RoomManager : MonoBehaviour
 
         if(DrawMode)
         {
-            PlayerRef = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatarIKDraw"), cam.position, cam.rotation);
+            if(PartyMode)
+            {
+                PlayerRef = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatarIKParty"), cam.position, cam.rotation);
+
+            }
+            else
+            if (ChangeMode)
+            {
+                PlayerRef = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatarIKDrawChange"), cam.position, cam.rotation);
+            }
+            else
+            {
+                PlayerRef = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatarIKDraw"), cam.position, cam.rotation);
+
+            }
+
         }
         else
         {
@@ -154,12 +179,25 @@ public class RoomManager : MonoBehaviour
 
         if (DrawMode)
         {
-            PlayerRef = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatarIKDraw"), cam.position, cam.rotation);
+            if (PartyMode)
+            {
+                PlayerRef = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatarIKParty"), cam.position, cam.rotation);
+
+            }
+            else
+            if (ChangeMode)
+            {
+                PlayerRef = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatarIKDrawChange"), cam.position, cam.rotation);
+            }
+            else
+            {
+                PlayerRef = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatarIKDraw"), cam.position, cam.rotation);
+
+            }
         }
         else
         {
             PlayerRef = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatarIK"), cam.position, cam.rotation);
-
         }
 
 
@@ -168,13 +206,11 @@ public class RoomManager : MonoBehaviour
 
         if(PhotonVoiceNetwork.Instance)
         {
-
             if (PhotonVoiceNetwork.Instance.ClientState == Photon.Realtime.ClientState.Joined)
             {
                 Debug.Log("Joined Voice");
                 PhotonVoiceNetwork.Instance.PrimaryRecorder.TransmitEnabled = false;
             }
-
         }
 
 
@@ -242,6 +278,21 @@ public class RoomManager : MonoBehaviour
     public void DropHand()
     {
         isHandRaised = false;
+    }
+
+    public void ObjectLock()
+    {
+        isLocked = true;
+    }
+
+    public void ObjectLockToggle()
+    {
+        isLocked = isLocked ? false : true;
+    }
+
+    public bool IsObjectLocked()
+    {
+        return isLocked;
     }
 
 }
