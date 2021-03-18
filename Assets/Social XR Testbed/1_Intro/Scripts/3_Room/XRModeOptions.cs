@@ -34,11 +34,14 @@ public class XRModeOptions : MonoBehaviour
     private void Start()
     {
 
-#if UNITY_EDITOR
-        pcModeButton.SetActive(true);
-#else
-        pcModeButton.SetActive(false);
-#endif
+        if(Application.isEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            pcModeButton.SetActive(true);
+        }
+        else
+        {
+            pcModeButton.SetActive(false);
+        }
 
         messageText.SetText("Please wait...");
 
@@ -66,7 +69,7 @@ public class XRModeOptions : MonoBehaviour
 
             yield return new WaitForSecondsRealtime(0.5f);
         }
-        if (!Application.isEditor)
+        if (!(Application.isEditor || Application.platform == RuntimePlatform.WindowsPlayer))
         {
             Debug.Log("ARSession.state: " + ARSession.state);
             switch (ARSession.state)
@@ -120,7 +123,7 @@ public class XRModeOptions : MonoBehaviour
         }
         else
         {
-            Debug.Log("Unity editor: AR not supported, Device Not Capable");
+            Debug.Log("PC: AR not supported, Device Not Capable");
             NextStep(false);
         }
     }

@@ -114,100 +114,206 @@ public class AvatarDrawHandler : MonoBehaviourPun
             return;
         }
 
-        //Return if there aren't any touches
-        if (Input.touchCount == 0) return;
+        //If on Phone
+        if(!((Application.isEditor || Application.platform == RuntimePlatform.WindowsPlayer)))
+        {
+            //Return if there aren't any touches
+            if (Input.touchCount == 0) return;
 
-        Touch t = Input.GetTouch(0);
+            Touch t = Input.GetTouch(0);
+
+            if (RoomManager.instance.drawActionManager.actionState == 0) //Draw Mode
+            {
+
+                if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == true && is3Ddrawing == false)
+                {
+                    is3Ddrawing = true;
+
+                    Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(drawPoint.transform.position);
+                    //Vector3 point = RoomManager.instance.referenceObject.GetComponent<TableObjectManager>().currentObject.transform.InverseTransformPoint(drawPoint.transform.position);
+                    photonView.RPC("StartDrawing", RpcTarget.AllBuffered, point);
+
+                }
+                else
+                if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == true && is3Ddrawing == true)
+                {
+                    Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(drawPoint.transform.position);
+                    //Vector3 point = RoomManager.instance.referenceObject.GetComponent<TableObjectManager>().currentObject.transform.InverseTransformPoint(drawPoint.transform.position);
+                    photonView.RPC("UpdateDrawing", RpcTarget.AllBuffered, point);
+                }
+                else
+                if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == false && is3Ddrawing == true)
+                {
+                    photonView.RPC("BakeDrawing", RpcTarget.AllBuffered);
+                    is3Ddrawing = false;
+                }
+
+                if (t.phase != TouchPhase.Began && t.phase != TouchPhase.Moved) return;
+
+                if (!EventSystem.current.IsPointerOverGameObject(t.fingerId))
+                {
+                    Ray r = cam.ScreenPointToRay(t.position);
+                    RaycastHit hit = new RaycastHit();
+                    if (Physics.Raycast(r, out hit) && hit.collider.gameObject.layer == 10)
+                    {
+                        Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(hit.point);
+                        //Vector3 point = RoomManager.instance.referenceObject.GetComponent<TableObjectManager>().currentObject.transform.InverseTransformPoint(hit.point);
+                        if (t.phase == TouchPhase.Began)
+                        {
+                            photonView.RPC("StartDrawing", RpcTarget.AllBuffered, point);
+                        }
+                        else if (t.phase == TouchPhase.Moved)
+                            photonView.RPC("UpdateDrawing", RpcTarget.AllBuffered, point);
+                        else if (t.phase == TouchPhase.Ended)
+                            photonView.RPC("BakeDrawing", RpcTarget.AllBuffered);
+
+                    }
+                }
+
+            }
+            else
+            if (RoomManager.instance.drawActionManager.actionState == 1) //Marker Mode
+            {
+                if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == true && is3Ddrawing == false)
+                {
+                    is3Ddrawing = true;
+
+                    Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(drawPoint.transform.position);
+                    photonView.RPC("PlaceMarker", RpcTarget.AllBuffered, point);
+
+                }
+                else
+                if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == true && is3Ddrawing == true)
+                {
+                    //Do Nothing
+                }
+                else
+                if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == false && is3Ddrawing == true)
+                {
+                    is3Ddrawing = false;
+                }
+
+                if (t.phase != TouchPhase.Began && t.phase != TouchPhase.Moved) return;
+
+                if (!EventSystem.current.IsPointerOverGameObject(t.fingerId))
+                {
+                    Ray r = cam.ScreenPointToRay(t.position);
+                    RaycastHit hit = new RaycastHit();
+                    if (Physics.Raycast(r, out hit) && hit.collider.gameObject.layer == 10)
+                    {
+                        Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(hit.point);
+                        if (t.phase == TouchPhase.Began)
+                        {
+                            photonView.RPC("PlaceMarker", RpcTarget.AllBuffered, point);
+                        }
+                        else if (t.phase == TouchPhase.Moved)
+                            photonView.RPC("MoveMarker", RpcTarget.AllBuffered, point);
+                    }
+                }
+            }
+        }
+        else //If PC
+        if(((Application.isEditor || Application.platform == RuntimePlatform.WindowsPlayer)))
+        {
+
+            if (RoomManager.instance.drawActionManager.actionState == 0) //Draw Mode
+            {
+
+                if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == true && is3Ddrawing == false)
+                {
+                    is3Ddrawing = true;
+
+                    Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(drawPoint.transform.position);
+                    //Vector3 point = RoomManager.instance.referenceObject.GetComponent<TableObjectManager>().currentObject.transform.InverseTransformPoint(drawPoint.transform.position);
+                    photonView.RPC("StartDrawing", RpcTarget.AllBuffered, point);
+
+                }
+                else
+                if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == true && is3Ddrawing == true)
+                {
+                    Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(drawPoint.transform.position);
+                    //Vector3 point = RoomManager.instance.referenceObject.GetComponent<TableObjectManager>().currentObject.transform.InverseTransformPoint(drawPoint.transform.position);
+                    photonView.RPC("UpdateDrawing", RpcTarget.AllBuffered, point);
+                }
+                else
+                if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == false && is3Ddrawing == true)
+                {
+                    photonView.RPC("BakeDrawing", RpcTarget.AllBuffered);
+                    is3Ddrawing = false;
+                }
+
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    Transform objectHit = hit.transform;
+
+                    if(objectHit.gameObject.layer == 10)
+                    {
+                        Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(hit.point);
+                        //Vector3 point = RoomManager.instance.referenceObject.GetComponent<TableObjectManager>().currentObject.transform.InverseTransformPoint(hit.point);
+                        if (Input.GetMouseButtonDown(0))
+                        {
+                            photonView.RPC("BakeDrawing", RpcTarget.AllBuffered);
+                            photonView.RPC("StartDrawing", RpcTarget.AllBuffered, point);
+                        }
+                        else if (Input.GetMouseButton(0))
+                            photonView.RPC("UpdateDrawing", RpcTarget.AllBuffered, point);
+                        //else if (Input.GetMouseButtonUp(0))
+                    }
+
+                    // Do something with the object that was hit by the raycast.
+                }
+
+            }
+            else
+            if (RoomManager.instance.drawActionManager.actionState == 1) //Marker Mode
+            {
+                if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == true && is3Ddrawing == false)
+                {
+                    is3Ddrawing = true;
+
+                    Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(drawPoint.transform.position);
+                    photonView.RPC("PlaceMarker", RpcTarget.AllBuffered, point);
+
+                }
+                else
+                if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == true && is3Ddrawing == true)
+                {
+                    //Do Nothing
+                }
+                else
+                if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == false && is3Ddrawing == true)
+                {
+                    is3Ddrawing = false;
+                }
+                
+
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    Transform objectHit = hit.transform;
+
+                    if (objectHit.gameObject.layer == 10)
+                    {
+                        Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(hit.point);
+                        if (Input.GetMouseButtonDown(0))
+                        {
+                            photonView.RPC("PlaceMarker", RpcTarget.AllBuffered, point);
+                        }
+                        else if (Input.GetMouseButton(0))
+                            photonView.RPC("MoveMarker", RpcTarget.AllBuffered, point);
+                    }
+
+                    // Do something with the object that was hit by the raycast.
+                }
+            }
+        }
+
         
-        if(RoomManager.instance.drawActionManager.actionState == 0) //Draw Mode
-        {
-
-            if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == true && is3Ddrawing == false)
-            {
-                is3Ddrawing = true;
-
-                Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(drawPoint.transform.position);
-                //Vector3 point = RoomManager.instance.referenceObject.GetComponent<TableObjectManager>().currentObject.transform.InverseTransformPoint(drawPoint.transform.position);
-                photonView.RPC("StartDrawing", RpcTarget.AllBuffered, point);
-
-            }
-            else
-            if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == true && is3Ddrawing == true)
-            {
-                Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(drawPoint.transform.position);
-                //Vector3 point = RoomManager.instance.referenceObject.GetComponent<TableObjectManager>().currentObject.transform.InverseTransformPoint(drawPoint.transform.position);
-                photonView.RPC("UpdateDrawing", RpcTarget.AllBuffered, point);
-            }
-            else
-            if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == false && is3Ddrawing == true)
-            {
-                photonView.RPC("BakeDrawing", RpcTarget.AllBuffered);
-                is3Ddrawing = false;
-            }
-
-            if (t.phase != TouchPhase.Began && t.phase != TouchPhase.Moved) return;
-
-            if (!EventSystem.current.IsPointerOverGameObject(t.fingerId))
-            {
-                Ray r = cam.ScreenPointToRay(t.position);
-                RaycastHit hit = new RaycastHit();
-                if (Physics.Raycast(r, out hit) && hit.collider.gameObject.layer == 10)
-                {
-                    Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(hit.point);
-                    //Vector3 point = RoomManager.instance.referenceObject.GetComponent<TableObjectManager>().currentObject.transform.InverseTransformPoint(hit.point);
-                    if (t.phase == TouchPhase.Began)
-                    {
-                        photonView.RPC("StartDrawing", RpcTarget.AllBuffered, point);
-                    }
-                    else if (t.phase == TouchPhase.Moved)
-                        photonView.RPC("UpdateDrawing", RpcTarget.AllBuffered, point);
-                    else if (t.phase == TouchPhase.Ended)
-                        photonView.RPC("BakeDrawing", RpcTarget.AllBuffered, point);
-
-                }
-            }
-
-        }
-        else
-        if (RoomManager.instance.drawActionManager.actionState == 1) //Marker Mode
-        {
-            if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == true && is3Ddrawing == false)
-            {
-                is3Ddrawing = true;
-
-                Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(drawPoint.transform.position);
-                photonView.RPC("PlaceMarker", RpcTarget.AllBuffered, point);
-
-            }
-            else
-            if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == true && is3Ddrawing == true)
-            {
-                //Do Nothing
-            }
-            else
-            if (RoomManager.instance.drawActionManager.isCurrentlyDrawing == false && is3Ddrawing == true)
-            {
-                is3Ddrawing = false;
-            }
-
-            if (t.phase != TouchPhase.Began && t.phase != TouchPhase.Moved) return;
-
-            if (!EventSystem.current.IsPointerOverGameObject(t.fingerId))
-            {
-                Ray r = cam.ScreenPointToRay(t.position);
-                RaycastHit hit = new RaycastHit();
-                if (Physics.Raycast(r, out hit) && hit.collider.gameObject.layer == 10)
-                {
-                    Vector3 point = RoomManager.instance.referenceObject.transform.InverseTransformPoint(hit.point);
-                    if (t.phase == TouchPhase.Began)
-                    {
-                        photonView.RPC("PlaceMarker", RpcTarget.AllBuffered, point);
-                    }
-                    else if (t.phase == TouchPhase.Moved)
-                        photonView.RPC("MoveMarker", RpcTarget.AllBuffered, point);
-                }
-            }
-        }
 
         
     }

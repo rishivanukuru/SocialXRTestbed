@@ -1297,7 +1297,7 @@ MonoBehaviour:
   playerGyro: {fileID: 1912070274860182321}
   DrawMode: 1
   PartyMode: 0
-  ChangeMode: 1
+  ChangeMode: 0
   drawActionManager: {fileID: 0}
   colorPicker: {fileID: 1115927487}
   weightSlider: {fileID: 1468320437}
@@ -1320,7 +1320,7 @@ MonoBehaviour:
   hostPanel: {fileID: 1972258819}
   hostAvatarButton: {fileID: 1210939885}
   hostObjectButton: {fileID: 1350520504}
-  avatarNumber: 5
+  avatarNumber: 2
   currentAvatar: 0
   objectNumber: 5
   currentObject: 0

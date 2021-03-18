@@ -492,6 +492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOrtho: 1
+  isFlip: 0
   RotationType: 0
 --- !u!114 &746359970037961000
 MonoBehaviour:

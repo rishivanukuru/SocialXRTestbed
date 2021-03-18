@@ -11,6 +11,7 @@ public class Billboard : MonoBehaviour
     }
 
     public bool isOrtho = false;
+    public bool isFlip = false;
 
     public rotationType RotationType;
     private Transform Cam;
@@ -29,6 +30,11 @@ public class Billboard : MonoBehaviour
         
         if (RotationType == rotationType.YAxis)
             LookVector.y = 0;
+
+        if(isFlip)
+        {
+            LookVector = -LookVector;
+        }
       
         if(isOrtho)
         {

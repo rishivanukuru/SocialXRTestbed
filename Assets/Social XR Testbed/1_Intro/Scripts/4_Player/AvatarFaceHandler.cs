@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class AvatarFaceHandler : MonoBehaviourPun
 { 
-    public Image faceImage;
+    public Image[] faceImages;
     public Sprite blankSprite;
 
     public string[] peopleNames;
@@ -22,38 +22,46 @@ public class AvatarFaceHandler : MonoBehaviourPun
     {
         myPhotonView = GetComponent<PhotonView>();
 
+        foreach(Image faceImage in faceImages)
+        {
+            faceImage.sprite = blankSprite;
+            faceImage.enabled = false;
 
-        faceImage.sprite = blankSprite;
-        faceImage.enabled = false;
-      
-        AssignAvatarFace();
-        
+            for (int i = 0; i < peopleImages.Length; i++)
+            {
+                if (photonView.Owner.NickName.ToLower() == peopleNames[i].ToString().ToLower())
+                {
+                    faceImage.sprite = peopleImages[i];
+                }
+            }
+
+        }
+
     }
 
 
     void AssignAvatarFace()
     {
-        for(int i = 0; i<peopleImages.Length; i++)
-        {
-            if(photonView.Owner.NickName.ToLower() == peopleNames[i].ToString().ToLower())
-            {
-                faceImage.sprite = peopleImages[i];
-                return;
-            }
-        }
-
-        faceImage.sprite = blankSprite;
+        
     }
 
     public void DisplayAvatarFace(bool isDisplay)
     {
         if(isDisplay)
         {
-            faceImage.enabled = true;
+            foreach (Image faceImage in faceImages)
+            {
+                faceImage.enabled = true;
+            }
+
         }
         else
         {
-            faceImage.enabled = false;
+            foreach (Image faceImage in faceImages)
+            {
+                faceImage.enabled = false;
+            }
+
         }
     }
 

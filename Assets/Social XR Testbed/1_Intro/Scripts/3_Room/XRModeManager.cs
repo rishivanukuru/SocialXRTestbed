@@ -22,6 +22,9 @@ public class XRModeManager : MonoBehaviour
 
     //Screen Objects
     public GameObject screenObjects;
+    public GameObject joystickMove;
+    public GameObject joystickJump;
+
 
     public GameObject generalInterfaceControls;
 
@@ -55,6 +58,15 @@ public class XRModeManager : MonoBehaviour
 
         screenObjects.SetActive(true);
         generalInterfaceControls.SetActive(true);
+
+        if(Application.isEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            if(joystickMove!=null)
+            joystickMove.SetActive(false);
+
+            if(joystickJump!=null)
+            joystickJump.SetActive(false);
+        }
 
     }
 

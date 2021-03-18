@@ -24,6 +24,8 @@ public class AvatarChangeManager : MonoBehaviour
     public GameObject hostPanel;
     public GameObject hostAvatarButton;
     public GameObject hostObjectButton;
+    public GameObject previousObjectButton;
+    public GameObject hostTableObjectSizeSlider;
     public int avatarNumber = 4;
     public int currentAvatar;
     public int objectNumber = 4;
@@ -44,6 +46,10 @@ public class AvatarChangeManager : MonoBehaviour
         if (!PhotonNetwork.IsMasterClient)
         {
     
+            if(hostTableObjectSizeSlider)
+            {
+                hostTableObjectSizeSlider.SetActive(false);
+            }
            
             if (isNewUI)
             {
@@ -63,8 +69,13 @@ public class AvatarChangeManager : MonoBehaviour
             if (isNewUI)
             {
                 hostPanel.SetActive(true);
+                hostTableObjectSizeSlider.SetActive(true);
                 hostAvatarButton.GetComponent<Button>().onClick.AddListener(ChangeAllAvatars);
-                hostObjectButton.GetComponent<Button>().onClick.AddListener(ChangeTableObject);                
+                hostObjectButton.GetComponent<Button>().onClick.AddListener(ChangeTableObject);
+                if(previousObjectButton!=null)
+                {
+                    previousObjectButton.GetComponent<Button>().onClick.AddListener(PreviousTableObject);
+                }
             }
             else
             {
@@ -76,6 +87,20 @@ public class AvatarChangeManager : MonoBehaviour
         }
 
         
+    }
+
+    public void ChangeObjectSize(float value)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            myPhotonView.RPC("RPCChangeObjectSize", RpcTarget.AllBuffered, value);
+        }
+    }
+
+    [PunRPC]
+    public void RPCChangeObjectSize(float scale)
+    {
+        RoomManager.instance.referenceObject.GetComponent<TableObjectManager>().currentObject.transform.localScale = scale * Vector3.one;
     }
 
     public void PlayTableVideo()
@@ -100,6 +125,19 @@ public class AvatarChangeManager : MonoBehaviour
             if (currentObject >= RoomManager.instance.referenceObject.GetComponent<TableObjectManager>().tableObjects)
             {
                 currentObject = 0;
+            }
+            myPhotonView.RPC("RPCChangeTableObject", RpcTarget.AllBuffered, currentObject);
+        }
+    }
+
+    public void PreviousTableObject()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            currentObject--;
+            if (currentObject < 0)
+            {
+                currentObject = RoomManager.instance.referenceObject.GetComponent<TableObjectManager>().tableObjects - 1;
             }
             myPhotonView.RPC("RPCChangeTableObject", RpcTarget.AllBuffered, currentObject);
         }
