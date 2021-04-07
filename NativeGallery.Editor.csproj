@@ -637,11 +637,11 @@
     <Reference Include="Boo.Lang">
       <HintPath>D:/Program Files (x86)/Unity/Hub/Editor/2019.4.18f1/Editor/Data/MonoBleedingEdge/lib/mono/unityscript/Boo.Lang.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.UI">
-      <HintPath>D:/Old Rishi/IDC/Unity Projects/SocialXRTestbed/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>D:/Old Rishi/IDC/Unity Projects/SocialXRTestbed/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>D:/Old Rishi/IDC/Unity Projects/SocialXRTestbed/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.TestRunner">
       <HintPath>D:/Old Rishi/IDC/Unity Projects/SocialXRTestbed/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
